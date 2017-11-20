@@ -1,4 +1,4 @@
-import json, urllib
+import json, urllib, jinja2, os
 from urllib import urlopen
 from key import secretkey
 
@@ -7,6 +7,10 @@ apiKey = secretkey  # place in file "key.py" with variable name secretkey. Get a
 steamID = "76561198011479838"  # I've included the ID for my own account for you to test things out with!
 # Here's some info on how to find your steamID if you don't know it, btw:
 # https://steamcommunity.com/sharedfiles/filedetails/?id=209000244
+jinjaData = {'username': ''}
+gameTotals = {'SUMTOTAL':0}
+timeTotal = 0
+
 
 def dataSafeGet(url):
     try:
@@ -47,6 +51,7 @@ def gamePrinter(steamID, name ="this user"):
                 else:
                     #Some titles, like PUBG Test Server, do not provide a title in the API for some reason.
                     title = "PRODUCT ID DOES NOT LIST TITLE"
+                totaler(title, game['playtime_2weeks'])
                 print(playtimePrinter(title, hours, minutes))
         print("")
 
@@ -60,6 +65,12 @@ def playtimePrinter(title, hours, minutes):
     else:
         string += "%s minute!" % minutes
     return string
+
+def totaler(title, time):
+    if gameTotals.get(title, None) == None:
+        gameTotals[title] = 0
+    gameTotals[title] += time
+    gameTotals['SUMTOTAL'] += time
 
 def getFriends(steamID):
     url = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=" + apiKey + "&steamid=" + steamID + "&relationship=friend"
@@ -80,6 +91,25 @@ def printRecentGames(steamID):
     userdata = getUserInfo(steamID)
     gamePrinter(userdata["steamid"], userdata["personaname"])
 
+def totalPrint():
+    #gameTotals.sort(key = lambda game: gameTotals[game], reverse=True)
+    #for game in gameTotals:
+     #   print
+    totalTime = gameTotals.pop('SUMTOTAL')
+    minutes = totalTime % 60
+    hours = int((totalTime - minutes) / 60)
+    import operator
+    sortedGames = sorted(gameTotals.items(), key=operator.itemgetter(1), reverse=True)
+    print 'The top ten games by playtime were:'
+    for game in sortedGames[0:10]:
+        tempMinutes = game[1] % 60
+        tempHours = (game[1] - tempMinutes) / 60
+        print '%s: %s hours and %s minute(s)' % (game[0], tempHours, tempMinutes)
+    print '\n'
+    print 'You and your friends played games for a timeTotal of %s hours and %s minutes!' % (hours, minutes)
+    print 'That\'s enough time to read \"War & Peace\" over %s times!' % (hours/33)
+
 
 printRecentGames(steamID)
 printFriendRecentGames(steamID)
+totalPrint()
