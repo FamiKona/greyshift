@@ -8,7 +8,7 @@ apiKey = secretkey  # place in file "key.py" with variable name secretkey. Get a
 steamID = "76561198011479838"  # I've included the ID for my own account for you to test things out with!
 # Here's some info on how to find your steamID if you don't know it, btw:
 # https://steamcommunity.com/sharedfiles/filedetails/?id=209000244
-jinjaData = {'username': ''}
+jinjaData = {'username': '', 'self': [], 'friends': [], 'finalString': ''}
 gameTotals = {'SUMTOTAL':0}
 timeTotal = 0
 
@@ -108,8 +108,10 @@ def totalPrint():
         tempHours = (game[1] - tempMinutes) / 60
         print '%s: %s hours and %s minute(s)' % (game[0], tempHours, tempMinutes)
     print '\n'
-    print 'You and your friends played games for a total of %s hours and %s minute(s)!' % (hours, minutes)
-    print 'That\'s enough time to read \"War & Peace\" over %s times!' % (hours/33)
+    finalA = 'You and your friends played games for a total of %s hours and %s minute(s)!' % (hours, minutes)
+    finalB = 'That\'s enough time to read \"War & Peace\" over %s times!' % (hours/33)
+    print finalA, finalB
+    jinjaData['finalString'] = finalA + '\n' + finalB
 
 def jinjaWrite(data):
     JINJA_ENVIRONMENT = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
