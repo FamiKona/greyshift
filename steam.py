@@ -106,7 +106,7 @@ def totalPrint():
         tempHours = (game[1] - tempMinutes) / 60
         print '%s: %s hours and %s minute(s)' % (game[0], tempHours, tempMinutes)
     print '\n'
-    print 'You and your friends played games for a timeTotal of %s hours and %s minutes!' % (hours, minutes)
+    print 'You and your friends played games for a total of %s hours and %s minute(s)!' % (hours, minutes)
     print 'That\'s enough time to read \"War & Peace\" over %s times!' % (hours/33)
 
 
