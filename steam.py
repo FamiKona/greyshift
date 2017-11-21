@@ -94,9 +94,6 @@ def printRecentGames(steamID):
     gamePrinter(userdata["steamid"], userdata["personaname"])
 
 def totalPrint():
-    #gameTotals.sort(key = lambda game: gameTotals[game], reverse=True)
-    #for game in gameTotals:
-     #   print
     totalTime = gameTotals.pop('SUMTOTAL')
     minutes = totalTime % 60
     hours = int((totalTime - minutes) / 60)
