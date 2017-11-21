@@ -1,4 +1,7 @@
-import json, urllib, jinja2, os
+import json
+import urllib
+import jinja2
+import os
 from io import open
 from urllib import urlopen
 from key import secretkey
@@ -9,7 +12,7 @@ steamID = "76561198011479838"  # I've included the ID for my own account for you
 # Here's some info on how to find your steamID if you don't know it, btw:
 # https://steamcommunity.com/sharedfiles/filedetails/?id=209000244
 jinjaData = {'username': '', 'self': [], 'friends': [], 'finalString': ''}
-gameTotals = {'SUMTOTAL' : 0}
+gameTotals = {'SUMTOTAL': 0}
 timeTotal = 0
 
 
