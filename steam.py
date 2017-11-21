@@ -1,4 +1,5 @@
 import json, urllib, jinja2, os
+from io import open
 from urllib import urlopen
 from key import secretkey
 
@@ -89,6 +90,7 @@ def printFriendRecentGames(steamID):
 
 def printRecentGames(steamID):
     userdata = getUserInfo(steamID)
+    jinjaData['username'] = userdata['personaname']
     gamePrinter(userdata["steamid"], userdata["personaname"])
 
 def totalPrint():
@@ -109,7 +111,17 @@ def totalPrint():
     print 'You and your friends played games for a total of %s hours and %s minute(s)!' % (hours, minutes)
     print 'That\'s enough time to read \"War & Peace\" over %s times!' % (hours/33)
 
+def jinjaWrite(data):
+    JINJA_ENVIRONMENT = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+                                           extensions=['jinja2.ext.autoescape'], autoescape=True)
+    template = JINJA_ENVIRONMENT.get_template('jinjaTemplate.html')
+
+    f = open('page.html', 'w', encoding='UTF-8')
+    f.write(template.render(data))
+    f.close()
+
 
 printRecentGames(steamID)
 printFriendRecentGames(steamID)
 totalPrint()
+jinjaWrite(jinjaData)
