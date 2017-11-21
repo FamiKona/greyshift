@@ -2,6 +2,8 @@ import json
 import urllib
 import jinja2
 import os
+import urllib2
+from urllib import urlencode
 from io import open
 from urllib import urlopen
 from key import secretkey
@@ -18,8 +20,8 @@ timeTotal = 0
 
 def dataSafeGet(url):
     try:
-        response = urlopen(url)
-    except urllib.error.URLError as e:
+        response = urllib2.urlopen(url)
+    except urllib2.HTTPError as e:
         if hasattr(e, "code"):
             if e.code == 500:
                 print("Error: Account not found.")
