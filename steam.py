@@ -7,6 +7,8 @@ from urllib import urlencode
 from io import open
 from urllib import urlopen
 from key import secretkey
+import logging
+import webapp2
 
 debug = False  # prints URLs with game data. WARNING: YOUR API KEY WILL BE VISIBLE IN THE OUTPUT
 apiKey = secretkey  # place in file "key.py" with variable name secretkey. Get a key at https://steamcommunity.com/dev!
@@ -16,6 +18,9 @@ steamID = "76561198011479838"  # I've included the ID for my own account for you
 jinjaData = {'username': '', 'self': [], 'friends': [], 'finalString': ''}
 gameTotals = {'SUMTOTAL': 0}
 timeTotal = 0
+
+JINJA_ENVIRONMENT = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+                                       extensions=['jinja2.ext.autoescape'], autoescape=True)
 
 
 def dataSafeGet(url):
@@ -116,16 +121,33 @@ def totalPrint():
     jinjaData['finalString'] = finalA + '\n' + finalB
 
 def jinjaWrite(data):
-    JINJA_ENVIRONMENT = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-                                           extensions=['jinja2.ext.autoescape'], autoescape=True)
     template = JINJA_ENVIRONMENT.get_template('jinjaTemplate.html')
 
-    f = open('page.html', 'w', encoding='UTF-8')
+    f = open('results.html', 'w', encoding='UTF-8')
     f.write(template.render(data))
     f.close()
 
+class MainHandler(webapp2.RequestHandler):
+    def get(self):
+        logging.info("In MainHandler")
+        template_values={}
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.write(template.render(template_values))
 
-printRecentGames(steamID)
-printFriendRecentGames(steamID)
-totalPrint()
-jinjaWrite(jinjaData)
+class SteamHandler(webapp2.RedirectHandler):
+    def get(self):
+        vals = {}
+        id = self.request.get('steamid')
+        go = self.request.get('goButton')
+        if id:
+            logging.info(id)
+
+#printRecentGames(steamID)
+#printFriendRecentGames(steamID)
+#totalPrint()
+#jinjaWrite(jinjaData)
+
+application = webapp2.WSGIApplication([ \
+                                      ('/.*', MainHandler)
+                                      ],
+                                      debug=True)
