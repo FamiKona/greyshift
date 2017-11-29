@@ -1,11 +1,8 @@
 import json
-import urllib
 import jinja2
 import os
 import urllib2
-from urllib import urlencode
 from io import open
-from urllib import urlopen
 from key import secretkey
 import logging
 import webapp2
@@ -141,13 +138,12 @@ class SteamHandler(webapp2.RedirectHandler):
         go = self.request.get('goButton')
         if id:
             logging.info(id)
+        template = JINJA_ENVIRONMENT.get_template('results.html')
+        self.response.write(template.render(vals))
 
 #printRecentGames(steamID)
 #printFriendRecentGames(steamID)
 #totalPrint()
 #jinjaWrite(jinjaData)
 
-application = webapp2.WSGIApplication([ \
-                                      ('/.*', MainHandler)
-                                      ],
-                                      debug=True)
+application = webapp2.WSGIApplication([('/userSea', SteamHandler), ('/.*', MainHandler)], debug=True)
