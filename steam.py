@@ -12,7 +12,7 @@ apiKey = secretkey  # place in file "key.py" with variable name secretkey. Get a
 steamID = "76561198011479838"  # I've included the ID for my own account for you to test things out with!
 # Here's some info on how to find your steamID if you don't know it, btw:
 # https://steamcommunity.com/sharedfiles/filedetails/?id=209000244
-jinjaData = {'username': '', 'self': [], 'friends': [], 'finalString': ''}
+jinjaData = {'username': '', 'games': [], 'finalString': ''}
 gameTotals = {'SUMTOTAL': 0}
 timeTotal = 0
 
@@ -63,6 +63,31 @@ def gamePrinter(steamID, name ="this user"):
                 print(playtimePrinter(title, hours, minutes))
         print("")
 
+def gameReturner(steamID, name ="this user"):
+    vals = {}
+    vals['games'] = []
+    url = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=" + apiKey + "&steamid=" + steamID + "&format=json"
+    userdata = dataSafeGet(url)
+    if debug:
+        print(url)
+    if userdata != None:
+        if len(userdata['response']) == 0:
+            vals['error'] = "User data private! :<"
+        elif userdata['response']['total_count'] == 0:
+            vals['error'] = "Nothing!"
+        else:
+            for game in userdata['response']['games']:
+                minutes = game['playtime_2weeks'] % 60
+                hours = int((game['playtime_2weeks'] - minutes) / 60)
+                if game.get('name', None) != None:
+                    title = game['name']
+                else:
+                    # Some titles, like PUBG Test Server, do not provide a title in the API for some reason.
+                    title = "PRODUCT ID DOES NOT LIST TITLE"
+                totaler(title, game['playtime_2weeks'])
+                vals['games'].append(playtimePrinter(title, hours, minutes))
+        return vals
+
 def playtimePrinter(title, hours, minutes):
     string = ""
     string += title + " for "
@@ -99,6 +124,11 @@ def printRecentGames(steamID):
     userdata = getUserInfo(steamID)
     jinjaData['username'] = userdata['personaname']
     gamePrinter(userdata["steamid"], userdata["personaname"])
+
+def returnRecentGames(steamID):
+    userdata = getUserInfo(steamID)
+    jinjaData['username'] = userdata['personaname']
+    return gameReturner(userdata["steamid"], userdata["personaname"])
 
 def totalPrint():
     totalTime = gameTotals.pop('SUMTOTAL')
@@ -138,6 +168,8 @@ class SteamHandler(webapp2.RedirectHandler):
         go = self.request.get('goButton')
         if id:
             logging.info(id)
+        vals['games'] = returnRecentGames(steamID)
+        vals['username'] = jinjaData['username']
         template = JINJA_ENVIRONMENT.get_template('results.html')
         self.response.write(template.render(vals))
 
@@ -145,5 +177,6 @@ class SteamHandler(webapp2.RedirectHandler):
 #printFriendRecentGames(steamID)
 #totalPrint()
 #jinjaWrite(jinjaData)
+jinjaData['games'] = returnRecentGames(steamID)
 
 application = webapp2.WSGIApplication([('/userSea', SteamHandler), ('/.*', MainHandler)], debug=True)
