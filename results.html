@@ -7,8 +7,10 @@
 <body>
 <h1>Results for {{username}}</h1>
 
+<h2>In the last 2 weeks, {{username}} has played:</h2>
+
 {% for game in games %}
-{{games}}
+{{game}}<br>
 {% endfor %}
 </body>
 </html>

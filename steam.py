@@ -168,8 +168,11 @@ class SteamHandler(webapp2.RedirectHandler):
         go = self.request.get('goButton')
         if id:
             logging.info(id)
-        vals['games'] = returnRecentGames(steamID)
+        tempGames = returnRecentGames(id)
+        tempGames = tempGames['games']
+        vals['games'] = tempGames
         vals['username'] = jinjaData['username']
+        logging.info(vals['games'])
         template = JINJA_ENVIRONMENT.get_template('results.html')
         self.response.write(template.render(vals))
 
