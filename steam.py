@@ -14,7 +14,6 @@ steamID = "76561198011479838"  # I've included the ID for my own account for you
 # https://steamcommunity.com/sharedfiles/filedetails/?id=209000244
 jinjaData = {'username': '', 'games': [], 'finalString': ''}
 gameTotals = {'SUMTOTAL': 0}
-timeTotal = 0
 
 JINJA_ENVIRONMENT = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
                                        extensions=['jinja2.ext.autoescape'], autoescape=True)
@@ -167,6 +166,7 @@ class SteamHandler(webapp2.RedirectHandler):
                 vals['username'] = jinjaData['username']
                 logging.info(vals['games'])
                 vals['fact'] = postWriter()
+                gameTotals['SUMTOTAL'] = 0
                 template = JINJA_ENVIRONMENT.get_template('results.html')
                 self.response.write(template.render(vals))
         else:
