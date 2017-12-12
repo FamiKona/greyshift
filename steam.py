@@ -56,10 +56,11 @@ def gameReturner(steamID, name ="this user"):
                 minutes = game['playtime_2weeks'] % 60
                 hours = int((game['playtime_2weeks'] - minutes) / 60)
                 if game.get('name', None) != None:
-                    title = game['name']
+                    title = '<i>' + game['name'] + '</i>'
+                    logging.info(title)
                 else:
                     # Some titles, like PUBG Test Server, do not provide a title in the API for some reason.
-                    title = "PRODUCT ID DOES NOT LIST TITLE"
+                    title = "[GAME DEVELOPER DID NOT SUPPLY TITLE]"
                 totaler(title, game['playtime_2weeks'])
                 vals['games'].append(playtimePrinter(title, hours, minutes))
         return vals
