@@ -3,6 +3,9 @@ api_version: 1
 threadsafe: no
 
 handlers:
+- url: /assets
+  static_dir: assets
+
 - url: .*
   script: steam.application
 

@@ -1,21 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Greyshift (Alpha)</title>
-</head>
-<body>
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Massively by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-loading">
 
-{{error}}
+		<!-- Wrapper -->
+			<div id="wrapper" class="fade-in">
 
-<form action="userSea" method="get">
-    <label for="steamid">Please enter your 64-bit SteamID or vanity URL</label>
-    <input type="text" id="steamid" name="steamid" />
-    <input type="submit" value="Go" name="goButton">
-    <br>
-    (Don't have one? Try 76561198011479838!)
-    <br>
-    (Your vanity URL is http://steamcommunity.com/id/[THIS PART]/)
-</form>
-</body>
+				<!-- Intro -->
+					<div id="intro">
+						<h4>{{error}}</h4>
+						<h1>Please enter your Steam ID or vanity URL</h1>
+						<p>Don't have one? Try 76561198011479838!</p>
+						<form action="userSea" method="get">
+    						<label for="steamid">Please enter your 64-bit SteamID or vanity URL</label>
+    						<input type="text" id="steamid" name="steamid" />
+    						<input type="submit" value="Go" name="goButton">
+    					</form>
+					</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
 </html>
