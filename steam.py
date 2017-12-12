@@ -133,13 +133,17 @@ class SteamHandler(webapp2.RedirectHandler):
         go = self.request.get('goButton')
         if id:
             logging.info(id)
-        tempGames = returnRecentGames(id)
-        tempGames = tempGames['games']
-        vals['games'] = tempGames
-        vals['username'] = jinjaData['username']
-        logging.info(vals['games'])
-        template = JINJA_ENVIRONMENT.get_template('results.html')
-        self.response.write(template.render(vals))
+            tempGames = returnRecentGames(id)
+            tempGames = tempGames['games']
+            vals['games'] = tempGames
+            vals['username'] = jinjaData['username']
+            logging.info(vals['games'])
+            template = JINJA_ENVIRONMENT.get_template('results.html')
+            self.response.write(template.render(vals))
+        else:
+            template_values = {"error": "you need to input an ID fam"}
+            template = JINJA_ENVIRONMENT.get_template('index.html')
+            self.response.write(template.render(template_values))
 
 # CODE BEYOND THIS POINT IS FOR TESTING PURPOSES
 
