@@ -97,23 +97,6 @@ def returnRecentGames(steamID):
     jinjaData['username'] = userdata['personaname']
     return gameReturner(userdata["steamid"], userdata["personaname"])
 
-def totalPrint():
-    totalTime = gameTotals.pop('SUMTOTAL')
-    minutes = totalTime % 60
-    hours = int((totalTime - minutes) / 60)
-    import operator
-    sortedGames = sorted(gameTotals.items(), key=operator.itemgetter(1), reverse=True)
-    print 'The top ten games by playtime were:'
-    for game in sortedGames[0:10]:
-        tempMinutes = game[1] % 60
-        tempHours = (game[1] - tempMinutes) / 60
-        print '%s: %s hours and %s minute(s)' % (game[0], tempHours, tempMinutes)
-    print '\n'
-    finalA = 'You and your friends played games for a total of %s hours and %s minute(s)!' % (hours, minutes)
-    finalB = 'That\'s enough time to read \"War & Peace\" over %s times!' % (hours/33)
-    print finalA, finalB
-    jinjaData['finalString'] = finalA + '\n' + finalB
-
 def jinjaWrite(data):
     template = JINJA_ENVIRONMENT.get_template('jinjaTemplate.html')
 
@@ -219,7 +202,6 @@ def printRecentGames(steamID):
 
 #printRecentGames(steamID)
 #printFriendRecentGames(steamID)
-#totalPrint()
 #jinjaWrite(jinjaData)
 #jinjaData['games'] = returnRecentGames(steamID)
 #vanityCheck('famikona')
