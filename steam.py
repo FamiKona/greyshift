@@ -128,6 +128,13 @@ def vanityCheck(vanity):
     else:
         return vanity
 
+def liveAccCheck(steamID):
+    try:
+        getUserInfo(steamID)
+        return True
+    except:
+        return False
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         logging.info("In MainHandler")
@@ -143,13 +150,18 @@ class SteamHandler(webapp2.RedirectHandler):
         if id:
             logging.info(id)
             id = vanityCheck(id)
-            tempGames = returnRecentGames(id)
-            tempGames = tempGames['games']
-            vals['games'] = tempGames
-            vals['username'] = jinjaData['username']
-            logging.info(vals['games'])
-            template = JINJA_ENVIRONMENT.get_template('results.html')
-            self.response.write(template.render(vals))
+            if liveAccCheck(id) == False:
+                template_values = {"error": id + " isn't a valid ID/vanity URL"}
+                template = JINJA_ENVIRONMENT.get_template('index.html')
+                self.response.write(template.render(template_values))
+            else:
+                tempGames = returnRecentGames(id)
+                tempGames = tempGames['games']
+                vals['games'] = tempGames
+                vals['username'] = jinjaData['username']
+                logging.info(vals['games'])
+                template = JINJA_ENVIRONMENT.get_template('results.html')
+                self.response.write(template.render(vals))
         else:
             template_values = {"error": "you need to input an ID fam"}
             template = JINJA_ENVIRONMENT.get_template('index.html')
@@ -198,6 +210,10 @@ def printRecentGames(steamID):
 #jinjaWrite(jinjaData)
 #jinjaData['games'] = returnRecentGames(steamID)
 #vanityCheck('famikona')
+#if liveAccCheck('76561197981612704'):
+#    print "true"
+#if liveAccCheck('7656119798161270466') == False:
+#    print "false"
 
 # END TEST CODE
 
