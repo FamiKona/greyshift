@@ -166,7 +166,8 @@ class SteamHandler(webapp2.RedirectHandler):
                 vals['username'] = jinjaData['username']
                 logging.info(vals['games'])
                 vals['fact'] = postWriter()
-                gameTotals['SUMTOTAL'] = 0
+                global gameTotals
+                gameTotals = {'SUMTOTAL': 0}
                 template = JINJA_ENVIRONMENT.get_template('results.html')
                 self.response.write(template.render(vals))
         else:
