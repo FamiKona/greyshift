@@ -10,3 +10,5 @@ current issues:
 In the extremely rare case that someone else's vanity URL is your exact personal 64-bit Steam ID, you'll have to use your own vanity URL for the website to function correctly. This is a limitation of the Steam API.
 
 Doesn't display *quite* right on mobile.
+
+Right now the only fun fact is about Jerry Seinfeld's *Bee Movie*.
