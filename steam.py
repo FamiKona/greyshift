@@ -39,30 +39,6 @@ def dataSafeGet(url):
     data = response.read().decode("utf-8")
     return json.loads(data)
 
-def gamePrinter(steamID, name ="this user"):
-    url = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=" + apiKey + "&steamid=" + steamID + "&format=json"
-    userdata = dataSafeGet(url)
-    if debug:
-        print(url)
-    if userdata != None:
-        print("In the last two weeks " + name + " has played:")
-        if len(userdata['response']) == 0:
-            print("User data private! :<")
-        elif userdata['response']['total_count'] == 0:
-            print("Nothing!")
-        else:
-            for game in userdata['response']['games']:
-                minutes = game['playtime_2weeks'] % 60
-                hours = int((game['playtime_2weeks'] - minutes) / 60)
-                if game.get('name', None) != None:
-                    title = game['name']
-                else:
-                    #Some titles, like PUBG Test Server, do not provide a title in the API for some reason.
-                    title = "PRODUCT ID DOES NOT LIST TITLE"
-                totaler(title, game['playtime_2weeks'])
-                print(playtimePrinter(title, hours, minutes))
-        print("")
-
 def gameReturner(steamID, name ="this user"):
     vals = {}
     vals['games'] = []
@@ -113,17 +89,6 @@ def getUserInfo(steamID):
     url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + apiKey + "&steamids=" + steamID
     data = dataSafeGet(url)
     return data["response"]["players"][0]
-
-def printFriendRecentGames(steamID):
-    frienddata = getFriends(steamID)
-    for friend in frienddata["friendslist"]["friends"]:
-        userdata = getUserInfo(friend["steamid"])
-        gamePrinter(userdata["steamid"], userdata["personaname"])
-
-def printRecentGames(steamID):
-    userdata = getUserInfo(steamID)
-    jinjaData['username'] = userdata['personaname']
-    gamePrinter(userdata["steamid"], userdata["personaname"])
 
 def returnRecentGames(steamID):
     userdata = getUserInfo(steamID)
@@ -176,10 +141,49 @@ class SteamHandler(webapp2.RedirectHandler):
         template = JINJA_ENVIRONMENT.get_template('results.html')
         self.response.write(template.render(vals))
 
+# CODE BEYOND THIS POINT IS FOR TESTING PURPOSES
+
+def gamePrinter(steamID, name ="this user"):
+    url = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=" + apiKey + "&steamid=" + steamID + "&format=json"
+    userdata = dataSafeGet(url)
+    if debug:
+        print(url)
+    if userdata != None:
+        print("In the last two weeks " + name + " has played:")
+        if len(userdata['response']) == 0:
+            print("User data private! :<")
+        elif userdata['response']['total_count'] == 0:
+            print("Nothing!")
+        else:
+            for game in userdata['response']['games']:
+                minutes = game['playtime_2weeks'] % 60
+                hours = int((game['playtime_2weeks'] - minutes) / 60)
+                if game.get('name', None) != None:
+                    title = game['name']
+                else:
+                    #Some titles, like PUBG Test Server, do not provide a title in the API for some reason.
+                    title = "PRODUCT ID DOES NOT LIST TITLE"
+                totaler(title, game['playtime_2weeks'])
+                print(playtimePrinter(title, hours, minutes))
+        print("")
+
+def printFriendRecentGames(steamID):
+    frienddata = getFriends(steamID)
+    for friend in frienddata["friendslist"]["friends"]:
+        userdata = getUserInfo(friend["steamid"])
+        gamePrinter(userdata["steamid"], userdata["personaname"])
+
+def printRecentGames(steamID):
+    userdata = getUserInfo(steamID)
+    jinjaData['username'] = userdata['personaname']
+    gamePrinter(userdata["steamid"], userdata["personaname"])
+
 #printRecentGames(steamID)
 #printFriendRecentGames(steamID)
 #totalPrint()
 #jinjaWrite(jinjaData)
 jinjaData['games'] = returnRecentGames(steamID)
+
+# END TEST CODE
 
 application = webapp2.WSGIApplication([('/userSea', SteamHandler), ('/.*', MainHandler)], debug=True)
