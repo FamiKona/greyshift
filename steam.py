@@ -119,6 +119,15 @@ def jinjaWrite(data):
     f.write(template.render(data))
     f.close()
 
+def vanityCheck(vanity):
+    url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + apiKey + "&vanityurl=" + vanity + "&format=json"
+    response = dataSafeGet(url)
+    response = response['response']
+    if response['success'] == 1:
+        return response['steamid']
+    else:
+        return vanity
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         logging.info("In MainHandler")
@@ -133,6 +142,7 @@ class SteamHandler(webapp2.RedirectHandler):
         go = self.request.get('goButton')
         if id:
             logging.info(id)
+            id = vanityCheck(id)
             tempGames = returnRecentGames(id)
             tempGames = tempGames['games']
             vals['games'] = tempGames
@@ -186,7 +196,8 @@ def printRecentGames(steamID):
 #printFriendRecentGames(steamID)
 #totalPrint()
 #jinjaWrite(jinjaData)
-jinjaData['games'] = returnRecentGames(steamID)
+#jinjaData['games'] = returnRecentGames(steamID)
+#vanityCheck('famikona')
 
 # END TEST CODE
 
