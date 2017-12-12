@@ -7,6 +7,7 @@ from key import secretkey
 import logging
 import webapp2
 import random
+from facts import facts
 
 debug = False  # prints URLs with game data. WARNING: YOUR API KEY WILL BE VISIBLE IN THE OUTPUT
 apiKey = secretkey  # place in file "key.py" with variable name secretkey. Get a key at https://steamcommunity.com/dev!
@@ -137,10 +138,9 @@ def liveAccCheck(steamID):
         return False
 
 def postWriter():
-    facts = [('That\'s enough time to watch Bee Movie %s times!', 95.0), ('That\'s enough time to climb the ladder in Metal Gear Solid 3 %s times!', 1.9)]
     time = gameTotals['SUMTOTAL']
     item = random.randint(0, len(facts) - 1)
-    string = facts[item][0] % "{0:.2f}".format(time / facts[item][1])
+    string = "That\'s enough time to " + facts[item][0] % "{0:.2f}".format(time / facts[item][1])
     return string
 
 class MainHandler(webapp2.RequestHandler):
@@ -168,6 +168,8 @@ class SteamHandler(webapp2.RedirectHandler):
                 vals['games'] = tempGames
                 vals['username'] = jinjaData['username']
                 logging.info(vals['games'])
+                if vals['games'] == []:
+                    vals['notif'] = "Nothing!"
                 vals['fact'] = postWriter()
                 global gameTotals
                 gameTotals = {'SUMTOTAL': 0}

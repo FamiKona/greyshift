@@ -21,6 +21,7 @@
 					<div id="intro">
 						<h1>In the last 2 weeks, {{username}} has played:</h1>
 						<br>
+						<h2>{{notif}}</h2>
 						{% for game in games %}
 						<h3>{{game | safe}}</h3><br>
 						{% endfor %}
