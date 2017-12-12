@@ -136,6 +136,11 @@ def liveAccCheck(steamID):
     except:
         return False
 
+def postWriter():
+    time = gameTotals['SUMTOTAL']
+    string = 'That\'s enough time to watch Bee Movie %s times!' % (time / (95))
+    return string
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         logging.info("In MainHandler")
@@ -161,6 +166,7 @@ class SteamHandler(webapp2.RedirectHandler):
                 vals['games'] = tempGames
                 vals['username'] = jinjaData['username']
                 logging.info(vals['games'])
+                vals['fact'] = postWriter()
                 template = JINJA_ENVIRONMENT.get_template('results.html')
                 self.response.write(template.render(vals))
         else:
