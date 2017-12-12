@@ -26,6 +26,7 @@
 						<h3>{{game | safe}}</h3><br>
 						{% endfor %}
                         <h4><i>{{fact}}</i></h4>
+                        <button onclick="goBack()">Go Back</button>
 					</div>
             </div>
 
@@ -36,6 +37,11 @@
 			<script src="assets/js/skel.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script>
+                function goBack() {
+    			    window.history.back();
+			}
+            </script>
 
 	</body>
 </html>
