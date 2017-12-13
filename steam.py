@@ -57,7 +57,7 @@ def gameReturner(steamID, name ="this user"):
                 minutes = game['playtime_2weeks'] % 60
                 hours = int((game['playtime_2weeks'] - minutes) / 60)
                 if game.get('name', None) != None:
-                    title = '<i>' + game['name'] + '</i>'
+                    title = '<i><a href=\"http://store.steampowered.com/app/' + str(game['appid']) + '/\">' + game['name'] + '</a></i>'
                     logging.info(title)
                 else:
                     # Some titles, like PUBG Test Server, do not provide a title in the API for some reason.
@@ -209,6 +209,7 @@ def printRecentGames(steamID):
 #    print "true"
 #if liveAccCheck('7656119798161270466') == False:
 #    print "false"
+gameReturner(steamID)
 
 # END TEST CODE
 
