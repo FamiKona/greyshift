@@ -56,6 +56,8 @@ def gameReturner(steamID, name ="this user"):
             for game in userdata['response']['games']:
                 minutes = game['playtime_2weeks'] % 60
                 hours = int((game['playtime_2weeks'] - minutes) / 60)
+                fullMinutes = game['playtime_forever'] % 60
+                fullHours = int((game['playtime_forever'] - minutes) / 60)
                 if game.get('name', None) != None:
                     title = '<i><a href=\"http://store.steampowered.com/app/' + str(game['appid']) + '/\">' + game['name'] + '</a></i>'
                     logging.info(title)
@@ -63,10 +65,10 @@ def gameReturner(steamID, name ="this user"):
                     # Some titles, like PUBG Test Server, do not provide a title in the API for some reason.
                     title = "[GAME DEVELOPER DID NOT SUPPLY TITLE]"
                 totaler(title, game['playtime_2weeks'])
-                vals['games'].append(playtimePrinter(title, hours, minutes))
+                vals['games'].append(playtimePrinter(title, hours, minutes, fullHours, fullMinutes))
         return vals
 
-def playtimePrinter(title, hours, minutes):
+def playtimePrinter(title, hours, minutes, fullH, fullM):
     string = ""
     string += title + " for "
     if hours != 0:
@@ -75,6 +77,13 @@ def playtimePrinter(title, hours, minutes):
         string += "%s minutes!" % minutes
     else:
         string += "%s minute!" % minutes
+    string += ' (Total time : '
+    if fullH != 0:
+        string += "%s hours and " % fullH
+    if fullM != 1:
+        string += "%s minutes)" % fullM
+    else:
+        string += "%s minute)" % fullM
     return string
 
 def totaler(title, time):
